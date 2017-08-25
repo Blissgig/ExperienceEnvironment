@@ -166,8 +166,9 @@ public class ExperienceEnviroment : MonoBehaviour {
             float y;
             float z;
             VectorObject position;
+	    Vector3 objectSize = gameObject.transform.localScale;
 
-
+		
             //If the terrain is used as the Min/Max of the area that can be used for placing the object
             if (objectDetails.useTerrainSize)
             {
@@ -200,9 +201,15 @@ public class ExperienceEnviroment : MonoBehaviour {
             z = Random.Range(objectDetails.MinimumRotation.z, objectDetails.MaximumRotation.z);
             gameObject.transform.rotation = Quaternion.Euler(x, y, z);
 
+            //Some objects do not have a renderer, so in those cases use the original scale
+            if (gameObject.GetComponent<Renderer>() != null)
+            {
+                objectSize = gameObject.GetComponent<Renderer>().bounds.size;
+            }
+		
             //Game Object's Position
             position = GameObjectPosition(
-                gameObject.GetComponent<Renderer>().bounds.size,
+                objectSize,
                 objectDetails);
 
             //Only place if the a position was found within GameObjectPosition.   

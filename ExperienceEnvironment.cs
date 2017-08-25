@@ -72,7 +72,7 @@ public class ExperienceEnviroment : MonoBehaviour {
                     this.currentTerrain = activeTerrain;
                 }
                 
-                if (activeTerrain != null)
+                if (activeTerrain == null)
                 {
                     //TODO: what to do if there is no terrain.
                     return;

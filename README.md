@@ -48,8 +48,9 @@ The additional property to this object is:
 
 
 -- NOTES --
+
 Be aware that the order you place objects within the inspector is the order that they are placed within the environment.  For example, in a project where I am using this I place Mountains before I place trees and other objects.  This is to insure that trees are not placed under a mountain.  Your needs may vary, just be aware of this design issue.
 
 The "IsInWater" function works, but I am not as happy with it as I could be.  Because I am rather new to Unity I believe there may be a better solution to this issue.  Feel free to let me know.
 
-If no value is placed in the "Current Terrain" property, the currently active terrain is selected.  If there is no terrain...  well, this is going to go badly.  It REALLY needs a terrain to function.   I believe I should simply throw an error if there is no terrain, but I will see if I can think of any better solution.  See function "PopulateExperience"
+If no value is placed in the "Current Terrain" property, the currently active terrain is selected.  If there is no terrain...  well, this is going to go badly.  It REALLY needs a terrain to function.   I believe I should simply throw an error if there is no terrain, but I will see if I can think of any better solution.  See function "PopulateExperience".    Also note, if this class is used to place objects by a class other than ExperienceEnvironment make sure to set the "currentTerrain" property.

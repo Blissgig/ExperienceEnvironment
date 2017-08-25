@@ -62,21 +62,20 @@ public class ExperienceEnviroment : MonoBehaviour {
             int iObjectCount;
 
 
-            //check if currentTerrain is null, if so check if there is an available terrain
+            //Check if currentTerrain is null, if so check if there is an available terrain
             if (this.currentTerrain == null)
             {
                 var activeTerrain = Terrain.activeTerrain;
 
                 if (activeTerrain != null)
                 {
-                    if (activeTerrain != null)
-                    {
-                        this.currentTerrain = activeTerrain;
-                    }
-                    else
-                    {
-                        //TODO: what to do if there is no terrain.
-                    }
+                    this.currentTerrain = activeTerrain;
+                }
+                
+                if (activeTerrain != null)
+                {
+                    //TODO: what to do if there is no terrain.
+                    return;
                 }
             }
 

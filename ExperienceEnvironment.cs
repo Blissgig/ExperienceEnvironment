@@ -325,8 +325,9 @@ public class ExperienceEnviroment : MonoBehaviour {
                 bAttempts++;
                 if (bAttempts > 250)
                 {
-                    position.IsFound = false; //This is used in the function PopulateExperience() in case no position is found
-                    isFound = true;
+                    //It is possible that the object was found during the last cycle.  So set the "IsFound" to whatever it is, true or false.
+                    position.IsFound = isFound; //This is used in the function PopulateExperience() in case no position is found
+                    isFound = true;             //Not necessarily true, but we need to get out of this loop.
                 }
 
             } while (isFound == false);

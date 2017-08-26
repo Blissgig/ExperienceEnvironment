@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ExperienceEnviroment : MonoBehaviour {
-
+public class ExperienceEnvironment : MonoBehaviour {
+    
     public Terrain currentTerrain;
     public int WaterLevel = 0; //This is used to determine what objects are not place in the water.  See function: GameObjectPosition
 
@@ -48,6 +48,7 @@ public class ExperienceEnviroment : MonoBehaviour {
         public bool IsFound = true;
     }
     
+
     private void Start ()
     {
         PopulateExperience();
@@ -70,12 +71,6 @@ public class ExperienceEnviroment : MonoBehaviour {
                 if (activeTerrain != null)
                 {
                     this.currentTerrain = activeTerrain;
-                }
-                
-                if (activeTerrain == null)
-                {
-                    //TODO: what to do if there is no terrain.
-                    return;
                 }
             }
 
@@ -157,22 +152,29 @@ public class ExperienceEnviroment : MonoBehaviour {
         }  
     }
 
-    public void AdjustObject(GameObject gameObject, ObjectDetails objectDetails)
+    public VectorObject AdjustObject(GameObject gameObject, ObjectDetails objectDetails)
     {
+        //The return object allows this function use outside this class 
+        //when there is a desire to place Other objects near it.
+        VectorObject VectorReturn = new VectorObject();
+
         try
         {
             float x;
             float y;
             float z;
             VectorObject position;
-	    Vector3 objectSize = gameObject.transform.localScale;
+            Vector3 objectSize = gameObject.transform.localScale;
 
-		
+
             //If the terrain is used as the Min/Max of the area that can be used for placing the object
             if (objectDetails.useTerrainSize)
             {
-                objectDetails.MinimumPosition = currentTerrain.GetPosition();
-                objectDetails.MaximumPosition = currentTerrain.terrainData.size; //TODO: should the Y value be reset to zero or...?
+                if (currentTerrain != null)
+                {
+                    objectDetails.MinimumPosition = currentTerrain.GetPosition();
+                    objectDetails.MaximumPosition = currentTerrain.terrainData.size; //TODO: should the Y value be reset to zero or...?
+                }
             }
 
             //Game Object's Size
@@ -205,7 +207,7 @@ public class ExperienceEnviroment : MonoBehaviour {
             {
                 objectSize = gameObject.GetComponent<Renderer>().bounds.size;
             }
-		
+
             //Game Object's Position
             position = GameObjectPosition(
                 objectSize,
@@ -216,16 +218,20 @@ public class ExperienceEnviroment : MonoBehaviour {
             if (position.IsFound)
             {
                 gameObject.transform.localPosition = position.Vector;
+                VectorReturn.Vector = position.Vector;
             }
             else
             {
                 Destroy(gameObject);
+                VectorReturn.IsFound = false;
             }
         }
         catch (System.Exception ex)
         {
             Debug.Log(ex.Message);
         }
+
+        return VectorReturn;
     }
 
     public List<string> LoadPrefabs(string Folder)
@@ -280,7 +286,7 @@ public class ExperienceEnviroment : MonoBehaviour {
                 if (objectDetails.avoidObjects)
                 {
                     //If y is zero, then it should be placed on the ground, aka top level of the terrain
-                    if (y == 0)
+                    if (y == 0 && this.currentTerrain != null)
                     {
                         //Find the top Y postion for the terrain
                         y = currentTerrain.SampleHeight(ObjectPositionToCheck);
@@ -373,7 +379,13 @@ public class ExperienceEnviroment : MonoBehaviour {
                 float z = (ObjectSize.z / bChunks);
                 float xStart = ObjectPosition.x + (ObjectSize.x / 2) - (x / 2);
                 float zStart = ObjectPosition.z + (ObjectSize.z / 2) - (x / 2);
-                float terrainHeight = currentTerrain.terrainData.size.y;
+                float terrainHeight = 0; 
+                if (currentTerrain != null)
+                {
+                    //Null Conditional is not available in the version of c# I am using for the Unity VR Experience.  
+                    //So I am using this bit of a hack to insure that the data is what is needed if there is no terrain.
+                    terrainHeight = currentTerrain.terrainData.size.y;
+                }
                 Vector3 ChunkSize = new Vector3((ObjectSize.x / bChunks), terrainHeight, (ObjectSize.z / bChunks));
                 Vector3 ObjectPositionToCheck;
                 bool isIntersected = false;
@@ -419,3 +431,4 @@ public class ExperienceEnviroment : MonoBehaviour {
         return bReturn;
     }
 }
+

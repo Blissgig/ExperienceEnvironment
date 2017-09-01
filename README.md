@@ -49,6 +49,8 @@ The additional property to this object is:
 
 -- NOTES --
 
+For objects within a subfolder of the "Resources" folder, be aware that only Game Objects/Prefabs can be within those folders.  If there is a subfolder within that subfolder it will cause an error if that object is selected.
+
 Be aware that the order you place objects within the inspector is the order that they are placed within the environment.  For example, in a project where I am using this I place Mountains before I place trees and other objects.  This is to insure that trees are not placed under a mountain.  Your needs may vary, just be aware of this design issue.
 
 The "IsInWater" function works, but I am not as happy with it as I could be.  Because I am rather new to Unity I believe there may be a better solution to this issue.  Feel free to let me know.
